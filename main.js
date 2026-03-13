@@ -1,6 +1,7 @@
 const generateBtn = document.getElementById("generate-btn");
 const themeBtn = document.getElementById("theme-btn");
 const numberCircles = document.querySelectorAll(".number-circle");
+const container = document.querySelector(".container");
 
 // Theme Logic
 const currentTheme = localStorage.getItem("theme");
@@ -24,8 +25,21 @@ themeBtn.addEventListener("click", () => {
 
 // Lotto Logic
 generateBtn.addEventListener("click", () => {
-    const lottoNumbers = generateLottoNumbers();
-    displayNumbers(lottoNumbers);
+    if (container.classList.contains("pressing")) return;
+
+    // Start animation
+    container.classList.add("pressing");
+
+    // Wait for the "hit" moment in animation
+    setTimeout(() => {
+        const lottoNumbers = generateLottoNumbers();
+        displayNumbers(lottoNumbers);
+    }, 400);
+
+    // Remove class after animation finishes
+    setTimeout(() => {
+        container.classList.remove("pressing");
+    }, 600);
 });
 
 function generateLottoNumbers() {
@@ -40,14 +54,14 @@ function generateLottoNumbers() {
 function displayNumber(circle, number, delay) {
     setTimeout(() => {
         circle.textContent = number;
-        circle.style.animation = "popIn 0.5s ease-out forwards";
+        circle.classList.add("show");
     }, delay);
 }
 
 function displayNumbers(numbers) {
     numberCircles.forEach((circle, index) => {
-        circle.style.animation = "";
+        circle.classList.remove("show");
         circle.textContent = "";
-        displayNumber(circle, numbers[index], index * 200);
+        displayNumber(circle, numbers[index], index * 150);
     });
 }
